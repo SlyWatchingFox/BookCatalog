@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="clr-namespace:BookCatalog.ViewModels"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="BookCatalog.Views.MainView"
+			 x:DataType="vm:MainViewModel">
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
+		 to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+		<vm:MainViewModel />
+	</Design.DataContext>
+
+	<Grid ColumnDefinitions="*" RowDefinitions="*"  Margin="4">
+		<Grid ColumnDefinitions="Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto"  Margin="4"
+			  HorizontalAlignment="Center" VerticalAlignment="Center"
+				Grid.Row="0" Grid.Column="0" IsVisible="{Binding ShowConnect}">
+			<TextBlock Text="Хост" HorizontalAlignment="Center" Margin="1" Grid.Row="0" Grid.Column="0"/>
+			<TextBlock Text="Порт" HorizontalAlignment="Center" Margin="1" Grid.Row="0" Grid.Column="1"/>
+			<TextBlock Text="Пользователь" HorizontalAlignment="Center" Margin="1" Grid.Row="0" Grid.Column="2"/>
+			<TextBlock Text="Пароль" HorizontalAlignment="Center" Margin="1" Grid.Row="0" Grid.Column="3"/>
+			<TextBox Text="{Binding Host}" Margin="10" Grid.Row="1" Grid.Column="0"/>
+			<TextBox Text="{Binding Port}" Margin="10" Grid.Row="1" Grid.Column="1"/>
+			<TextBox Text="{Binding UserId}" Margin="10" Grid.Row="1" Grid.Column="2"/>
+			<TextBox Text="{Binding Pass}" Margin="10" Grid.Row="1" Grid.Column="3"/>
+			<Button Content="Подключиться" Margin="10" Grid.Row="2" Grid.Column="0"
+			Command="{Binding Connect}"/>
+		</Grid>
+		<Grid ColumnDefinitions="*" RowDefinitions="Auto,*"  Margin="4"
+				Grid.Row="0" Grid.Column="0" IsVisible="{Binding ShowTabl}">
+			<Grid ColumnDefinitions="Auto,Auto,Auto" RowDefinitions="Auto"  Margin="4" Grid.Row="0" Grid.Column="0" >
+				<Button Content="Добавить" Margin="10" Grid.Row="0" Grid.Column="0"
+				Command="{Binding AddBook}"/>
+				<Button Content="Отменить" Margin="10" Grid.Row="0" Grid.Column="1"
+				Command="{Binding Cancel}"/>
+				<Button Content="Сохранить" Margin="10" Grid.Row="0" Grid.Column="2"
+				Command="{Binding Save}"/>
+			</Grid>
+			<DataGrid Margin="10"  ItemsSource="{Binding Books}" Grid.Row="1" Grid.Column="0"
+						IsReadOnly="False"
+						CanUserReorderColumns="True"
+						CanUserResizeColumns="True"
+						CanUserSortColumns="True"
+						GridLinesVisibility="All"
+						BorderThickness="1" BorderBrush="Gray">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Издательство"  Binding="{Binding Publisher}"/>
+					<DataGridTextColumn Header="Год выпуска" Binding="{Binding Year}" />
+					<DataGridTextColumn Header="Автор" Binding="{Binding Author}" />
+					<DataGridTextColumn Header="Название книги" Binding="{Binding Name}" />
+				</DataGrid.Columns>
+			</DataGrid>
+		</Grid>
+	</Grid>
+</UserControl>
+
+
+
