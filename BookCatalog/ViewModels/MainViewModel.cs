@@ -56,7 +56,6 @@ public class MainViewModel : ViewModelBase
             ShowTabl = true;
             _booksDb.ReadTable(Books);
         }
-
     }
     public void AddBook()
     {

@@ -13,7 +13,7 @@
 	</Design.DataContext>
 
 	<Grid ColumnDefinitions="*" RowDefinitions="*"  Margin="4">
-		<Grid ColumnDefinitions="Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto,Auto"  Margin="4"
+		<Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto"  Margin="4"
 			  HorizontalAlignment="Center" VerticalAlignment="Center"
 				Grid.Row="0" Grid.Column="0" IsVisible="{Binding ShowConnect}">
 			<TextBlock Text="Хост" HorizontalAlignment="Center" Margin="1" Grid.Row="0" Grid.Column="0"/>
@@ -24,7 +24,7 @@
 			<TextBox Text="{Binding Port}" Margin="10" Grid.Row="1" Grid.Column="1"/>
 			<TextBox Text="{Binding UserId}" Margin="10" Grid.Row="1" Grid.Column="2"/>
 			<TextBox Text="{Binding Pass}" Margin="10" Grid.Row="1" Grid.Column="3"/>
-			<Button Content="Подключиться" Margin="10" Grid.Row="2" Grid.Column="0"
+			<Button Content="Подключиться" Margin="10" Grid.Row="1" Grid.Column="4"
 			Command="{Binding Connect}"/>
 		</Grid>
 		<Grid ColumnDefinitions="*" RowDefinitions="Auto,*"  Margin="4"
