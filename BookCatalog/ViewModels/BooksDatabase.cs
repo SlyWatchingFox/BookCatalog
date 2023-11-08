@@ -21,7 +21,6 @@ namespace BookCatalog.ViewModels
             CreateDB();
             CreateTable();
         }
-
         public void SaveTable(ObservableCollection<Book> Books, ObservableCollection<Book> DeleteBooks)
         {
             string connectionString = $"Server={Host};Port={Port};Database={_dbName}; User Id={UserId};Password={Pass};";
@@ -33,7 +32,7 @@ namespace BookCatalog.ViewModels
                 adapter.Fill(ds);
                 DataTable dt = ds.Tables[0];
                 var rowsСount = dt.Rows.Count;
-                for(int i = 0; i < DeleteBooks.Count; i++)
+                for (int i = 0; i < DeleteBooks.Count; i++)
                 {
                     for (int j = 0; j < rowsСount; j++)
                     {

@@ -20,7 +20,6 @@ public class MainViewModel : ViewModelBase
     private Book _bookDelete;
     private string _messError;
     private bool _dialogIsOpen;
-
     public string Host
     {
         get => _host;
@@ -93,10 +92,10 @@ public class MainViewModel : ViewModelBase
             Books.Clear();
             _booksDb.ReadTable(Books);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             MessError = ex.Message;
-            DialogIsOpen= true;
+            DialogIsOpen = true;
         }
     }
     public void Delete()
@@ -124,10 +123,4 @@ public class MainViewModel : ViewModelBase
             DialogIsOpen = true;
         }
     }
-
-
 }
-
-
-
-
