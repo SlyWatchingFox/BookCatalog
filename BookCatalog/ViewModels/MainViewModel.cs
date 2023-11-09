@@ -69,8 +69,8 @@ public class MainViewModel : ViewModelBase
     {
         try
         {
-            _booksDb = new BooksDatabase(_host, _port, _userId, _pass);
-            //_booksDb = new BooksDatabase("127.0.0.1", 5432, "postgres", "5302");
+            //_booksDb = new BooksDatabase(_host, _port, _userId, _pass);
+            _booksDb = new BooksDatabase("127.0.0.1", 5432, "postgres", "5302");
             ShowConnect = false;
             ShowTable = true;
             _booksDb.ReadTable(Books);
@@ -116,6 +116,8 @@ public class MainViewModel : ViewModelBase
         try
         {
             _booksDb.SaveTable(Books, DeleteBooks);
+            Books.Clear();
+            _booksDb.ReadTable(Books);
         }
         catch (Exception ex)
         {

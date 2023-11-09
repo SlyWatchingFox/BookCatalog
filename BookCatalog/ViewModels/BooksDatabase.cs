@@ -11,7 +11,7 @@ namespace BookCatalog.ViewModels
         public int Port { get; set; }
         public string UserId { get; set; }
         public string Pass { get; set; }
-        public string _dbName = "books_collection_db";
+        private string _dbName = "books_collection_db";
         public BooksDatabase(string host, int port, string userId, string pass)
         {
             Host = host;
@@ -125,9 +125,9 @@ namespace BookCatalog.ViewModels
                 NpgsqlCommand command = new NpgsqlCommand();
                 command.CommandText = $"SELECT datname FROM pg_database WHERE datname = '{_dbName}'";
                 command.Connection = connection;
-                if (command.ExecuteScalar().ToString() != _dbName)
+                if (command.ExecuteScalar() == null)
                 {
-                    command.CommandText = $"CREATE DATABASE '{_dbName}'";
+                    command.CommandText = $"CREATE DATABASE {_dbName}";
                     command.Connection = connection;
                     command.ExecuteNonQuery();
                 }
