@@ -23,7 +23,7 @@
 			</Grid>
 		</dialogHost:DialogHost.DialogContent>
 		<Grid ColumnDefinitions="*" RowDefinitions="*"  Margin="4">
-			<Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto"  Margin="4"
+			<Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowDefinitions="Auto,Auto"  Margin="4"
 				  HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" IsVisible="{Binding ShowConnect}">
 				<TextBlock Text="Хост" HorizontalAlignment="Center" Margin="1" Grid.Row="0" Grid.Column="0"/>
 				<TextBlock Text="Порт" HorizontalAlignment="Center" Margin="1" Grid.Row="0" Grid.Column="1"/>
@@ -33,7 +33,15 @@
 				<TextBox Text="{Binding Port}" Margin="10" Grid.Row="1" Grid.Column="1"/>
 				<TextBox Text="{Binding UserId}" Margin="10" Grid.Row="1" Grid.Column="2"/>
 				<TextBox Text="{Binding Pass}" Margin="10" Grid.Row="1" Grid.Column="3"/>
-				<Button Content="Подключиться" Margin="10" Grid.Row="1" Grid.Column="4"
+				<ComboBox ItemsSource="{Binding DbTypes}" Grid.Row="1" Grid.Column="4" VerticalAlignment="Center"
+						SelectedItem="{Binding DbTypeSelected}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Title}" />
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
+				<Button Content="Подключиться" Margin="10" Grid.Row="1" Grid.Column="5"
 				Command="{Binding Connect}"/>
 			</Grid>
 			<Grid ColumnDefinitions="*" RowDefinitions="Auto,*"  Margin="4"

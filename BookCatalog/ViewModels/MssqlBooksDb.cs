@@ -1,33 +1,27 @@
-﻿using Npgsql;
+﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
-
 namespace BookCatalog.ViewModels
 {
-    public class BooksDatabase
+    public class MssqlBooksDb : IBooksDatabase
     {
         public string Host { get; set; }
-        public int Port { get; set; }
-        public string UserId { get; set; }
-        public string Pass { get; set; }
         private string _dbName = "books_collection_db";
-        public BooksDatabase(string host, int port, string userId, string pass)
+        public MssqlBooksDb(string host)
         {
             Host = host;
-            Port = port;
-            UserId = userId;
-            Pass = pass;
+            if (string.IsNullOrWhiteSpace(Host)) Host = "(localdb)\\mssqllocaldb";
             CreateDB();
             CreateTable();
         }
         public void SaveTable(ObservableCollection<Book> Books, ObservableCollection<Book> DeleteBooks)
         {
-            string connectionString = $"Server={Host};Port={Port};Database={_dbName}; User Id={UserId};Password={Pass};";
-            string npgsql = "SELECT * FROM books";
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            string connectionString = $"Server={Host};Database={_dbName};Trusted_Connection=True;";
+            string sql = "SELECT * FROM books";
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(npgsql, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);
                 DataSet ds = new DataSet();
                 adapter.Fill(ds);
                 DataTable dt = ds.Tables[0];
@@ -67,7 +61,7 @@ namespace BookCatalog.ViewModels
                         dt.Rows.Add(newRow);
                     }
                 }
-                NpgsqlCommandBuilder commandBuilder = new NpgsqlCommandBuilder(adapter);
+                SqlCommandBuilder commandBuilder = new SqlCommandBuilder(adapter);
                 adapter.Update(ds);
                 ds.Clear();
                 adapter.Fill(ds);
@@ -76,11 +70,11 @@ namespace BookCatalog.ViewModels
 
         public void ReadTable(ObservableCollection<Book> Books)
         {
-            string connectionString = $"Server={Host};Port={Port};Database={_dbName}; User Id={UserId};Password={Pass};";
-            string npgsql = "SELECT * FROM books";
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            string connectionString = $"Server={Host};Database={_dbName};Trusted_Connection=True;";
+            string sql = "SELECT * FROM books";
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                NpgsqlDataAdapter adapter = new NpgsqlDataAdapter(npgsql, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);
                 DataSet ds = new DataSet();
                 adapter.Fill(ds);
                 if (ds.Tables.Count != 1) return;
@@ -101,29 +95,36 @@ namespace BookCatalog.ViewModels
         }
         public void CreateTable()
         {
-            string connectionString = $"Server={Host};Port={Port};Database={_dbName}; User Id={UserId};Password={Pass};";
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            string connectionString = $"Server={Host};Database={_dbName};Trusted_Connection=True;";
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
+
                 connection.Open();
-                NpgsqlCommand command = new NpgsqlCommand();
-                command.CommandText = "CREATE TABLE IF NOT EXISTS books (" +
-                    "book_id serial PRIMARY KEY," +
-                    "publisher VARCHAR ( 50 ) NOT NULL," +
-                    "year VARCHAR ( 50 ) NOT NULL," +
-                    "author VARCHAR ( 50 ) NOT NULL," +
-                    "name VARCHAR ( 50 ) NOT NULL);";
+                SqlCommand command = new SqlCommand();
+                command.CommandText = "SELECT 1 FROM sys.Objects WHERE Object_id = OBJECT_ID('books')";
                 command.Connection = connection;
-                command.ExecuteNonQuery();
+                object s = command.ExecuteScalar();
+                if (command.ExecuteScalar() == null)
+                {
+                    command.CommandText = "CREATE TABLE books (" +
+                    "book_id INT PRIMARY KEY IDENTITY," +
+                    "publisher NVARCHAR(50) NOT NULL," +
+                    "year NVARCHAR(50) NOT NULL," +
+                    "author NVARCHAR(50) NOT NULL," +
+                    "name NVARCHAR(50) NOT NULL)";
+                    command.Connection = connection;
+                    command.ExecuteNonQuery();
+                }
             }
         }
         public void CreateDB()
         {
-            string connectionString = $"Server={Host};Port={Port}; User Id={UserId};Password={Pass};";
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            string connectionString = $"Server={Host};Trusted_Connection=True;";
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                NpgsqlCommand command = new NpgsqlCommand();
-                command.CommandText = $"SELECT datname FROM pg_database WHERE datname = '{_dbName}'";
+                SqlCommand command = new SqlCommand();
+                command.CommandText = $"SELECT name FROM master.dbo.sysdatabases WHERE name = '{_dbName}'";
                 command.Connection = connection;
                 if (command.ExecuteScalar() == null)
                 {

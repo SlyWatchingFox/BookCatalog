@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Avalonia.Controls;
-using DynamicData;
 using ReactiveUI;
 
 namespace BookCatalog.ViewModels;
@@ -10,7 +8,13 @@ public class MainViewModel : ViewModelBase
 {
     public ObservableCollection<Book> Books { get; set; } = new ObservableCollection<Book>();
     public ObservableCollection<Book> DeleteBooks { get; set; } = new ObservableCollection<Book>();
-    private BooksDatabase _booksDb;
+    public DbType[] DbTypes { get; set; } = new DbType[]
+    {
+        new DbType("mssql"),
+        new DbType("npgsql")
+    };
+    public DbType DbTypeSelected { get; set; }
+    private IBooksDatabase _booksDb;
     private string _host;
     private int _port;
     private string _userId;
@@ -65,12 +69,12 @@ public class MainViewModel : ViewModelBase
         get => _dialogIsOpen;
         set => this.RaiseAndSetIfChanged(ref _dialogIsOpen, value);
     }
+
     public void Connect()
     {
         try
         {
-            _booksDb = new BooksDatabase(_host, _port, _userId, _pass);
-            //_booksDb = new BooksDatabase("127.0.0.1", 5432, "postgres", "5302");
+            _booksDb = BooksDbFactory.GetBooksDb(DbTypeSelected.Title, _host, _port, _userId, _pass);
             ShowConnect = false;
             ShowTable = true;
             _booksDb.ReadTable(Books);
